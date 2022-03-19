@@ -1,15 +1,26 @@
-# Basic Sample Hardhat Project
+# Earth.fm
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+Earth.fm - funding reforestation projects by listening to nature
 
-Try running some of the following tasks:
+About
+Earth.fm is a non-profit organisation that seeks to protect and regenerate natural ecosystems and reconnect us to the more-than-human world.
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
+/******************************************
+ * ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░*
+ * ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░*
+ * ░░░░░░░░░░░░░░,@@@@@@@,░░░░░░░░░░░░░░░░*
+ * ░░░░░,,,..░░░,@@@@@@/@@,░░.oo8888o.░░░░*
+ * ░░░,&%%&%&&%,@@@@@/@@@@@@,8888\88/8o░░░*
+ * ░░,%&\%&&%&&%,@@@\@@@/@@@88\88888/88'░░*
+ * ░░%&&%&%&/%&&%@@\@@/ /@@@88888\88888'░░*
+ * ░░%&&%/ %&%%&&@@\ V /@@'░`88\8 `/88'░░░*
+ * ░░░&%\ ` /%&░░░░░|.|░░░░░░░░\ '|8'░░░░░*
+ * ░░░░░░|o|░░░░░░░░| |░░░░░░░░░| |░░░░░░░*
+ * ░░░░░░|.|░░░░░░░░| |░░░░░░░░░| |░░░░░░░*
+ * ░░░\\/ ._\//_/__/  ,\_//__\\/.  \_//░░░*
+ * ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░*
+ * ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░*
+ *****************************************/
+
+We're developing a platform to showcase rare natural soundscapes with the help of professional field recordists, turn them into gorgeous unique NFTs with the help of different artists, and auction them, using the money raised to support the protection and restoration of natural ecosystems, empowering local communities and fighting climate change. 
 ```
