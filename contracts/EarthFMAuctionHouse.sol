@@ -34,8 +34,8 @@ import { IEarthFM } from './interfaces/IEarthFM.sol';
 import { IWETH } from './interfaces/IWETH.sol';
 
 contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, ReentrancyGuardUpgradeable, OwnableUpgradeable {
-    // The Nouns ERC721 token contract
-    INounsToken public nouns;
+    // The EarthFM ERC1155 token contract
+    IEarthFM public earthFm;
 
     // The address of the WETH contract
     address public weth;
@@ -53,7 +53,7 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
     uint256 public duration;
 
     // The active auction
-    INounsAuctionHouse.Auction public auction;
+    IEarthFMAuctionHouse.Auction public auction;
 
     /**
      * @notice Initialize the auction house and base contracts,
@@ -61,7 +61,7 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
      * @dev This function can only be called once.
      */
     function initialize(
-        IEarthFMToken _sounds,
+        IEarthFM _earthFm,
         address _weth,
         uint256 _timeBuffer,
         uint256 _reservePrice,
@@ -74,7 +74,7 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
 
         _pause();
 
-        sounds = _sounds;
+        earthFm = _earthFm;
         weth = _weth;
         timeBuffer = _timeBuffer;
         reservePrice = _reservePrice;
@@ -83,7 +83,7 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
     }
 
     /**
-     * @notice Settle the current auction, mint a new EarthSound, and put it up for auction.
+     * @notice Settle the current auction, mint a new EarthFm sound, and put it up for auction.
      */
     function settleCurrentAndCreateNewAuction() external override nonReentrant whenNotPaused {
         _settleAuction();
@@ -105,7 +105,7 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
     function createBid(uint256 soundId) external payable override nonReentrant {
         IEarthFMAuctionHouse.Auction memory _auction = auction;
 
-        require(_auction.nounId == nounId, 'Noun not up for auction');
+        require(_auction.earthSoundId == soundId, 'Earth Sound not up for auction');
         require(block.timestamp < _auction.endTime, 'Auction expired');
         require(msg.value >= reservePrice, 'Must send at least reservePrice');
         require(
@@ -129,10 +129,10 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
             auction.endTime = _auction.endTime = block.timestamp + timeBuffer;
         }
 
-        emit AuctionBid(_auction.nounId, msg.sender, msg.value, extended);
+        emit AuctionBid(_auction.earthSoundId, msg.sender, msg.value, extended);
 
         if (extended) {
-            emit AuctionExtended(_auction.nounId, _auction.endTime);
+            emit AuctionExtended(_auction.earthSoundId, _auction.endTime);
         }
     }
 
@@ -196,12 +196,12 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
      * catch the revert and pause this contract.
      */
     function _createAuction() internal {
-        try nouns.mint() returns (uint256 nounId) {
+        try earthFm.mint() returns (uint256 earthSoundId) {
             uint256 startTime = block.timestamp;
             uint256 endTime = startTime + duration;
 
             auction = Auction({
-                nounId: nounId,
+                earthSoundId: earthSoundId,
                 amount: 0,
                 startTime: startTime,
                 endTime: endTime,
@@ -209,7 +209,7 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
                 settled: false
             });
 
-            emit AuctionCreated(nounId, startTime, endTime);
+            emit AuctionCreated(earthSoundId, startTime, endTime);
         } catch Error(string memory) {
             _pause();
         }
@@ -220,7 +220,7 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
      * @dev If there are no bids, the Noun is burned.
      */
     function _settleAuction() internal {
-        INounsAuctionHouse.Auction memory _auction = auction;
+        IEarthFMAuctionHouse.Auction memory _auction = auction;
 
         require(_auction.startTime != 0, "Auction hasn't begun");
         require(!_auction.settled, 'Auction has already been settled');
@@ -229,16 +229,16 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
         auction.settled = true;
 
         if (_auction.bidder == address(0)) {
-            nouns.burn(_auction.nounId);
+            //earthFm.burn(_auction.earthSoundId);
         } else {
-            nouns.transferFrom(address(this), _auction.bidder, _auction.nounId);
+            earthFm.safeTransferFrom(address(this), _auction.bidder, _auction.earthSoundId, 1,"");
         }
 
         if (_auction.amount > 0) {
             _safeTransferETHWithFallback(owner(), _auction.amount);
         }
 
-        emit AuctionSettled(_auction.nounId, _auction.bidder, _auction.amount);
+        emit AuctionSettled(_auction.earthSoundId, _auction.bidder, _auction.amount);
     }
 
     /**

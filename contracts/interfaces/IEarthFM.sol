@@ -39,8 +39,6 @@ interface IEarthFM is IERC1155 {
 
     function burn(uint256 tokenId) external;
 
-    function dataURI(uint256 tokenId) external returns (string memory);
-
     function setDAOAddress(address daoAddress) external;
 
     function setMinter(address minter) external;
