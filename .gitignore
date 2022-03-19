@@ -1,2 +1,7 @@
 node_modules
 artifacts
+package-lock.json
+remix-compiler.config.js
+cache/solidity-files-cache.json
+scripts/sample-script.js
+test/sample-test.js
