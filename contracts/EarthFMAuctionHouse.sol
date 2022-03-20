@@ -119,7 +119,7 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
 
         // Refund the last bidder, if applicable
         if (lastBidder != address(0)) {
-            _safeTransferWETH(lastBidder, _auction.amount);
+            _safeTransferMatic(lastBidder, _auction.amount);
         }
 
         auction.amount = msg.value;
@@ -238,18 +238,19 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
         }
 
         if (_auction.amount > 0) {
-            _safeTransferWETH(owner(), _auction.amount);
+            _safeTransferMatic(owner(), _auction.amount);
         }
 
         emit AuctionSettled(_auction.earthSoundId, _auction.bidder, _auction.amount);
     }
 
     /**
-     * @notice Transfer ETH. If the ETH transfer fails, wrap the ETH and try send it as WETH.
+     * @notice Transfer Matic and return the success status.
+     * @dev This function only forwards 30,000 gas to the callee.
      */
-    function _safeTransferWETH(address to, uint256 amount) internal {
-        IWETH(weth).deposit{ value: amount }();
-        IERC20(weth).transfer(to, amount);
+    function _safeTransferMatic(address to, uint256 value) internal returns (bool) {
+        (bool success, ) = to.call{ value: value, gas: 30_000 }(new bytes(0));
+        return success;
     }
 
 }
