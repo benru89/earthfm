@@ -33,14 +33,10 @@ import { IEarthFMAuctionHouse } from './interfaces/IEarthFMAuctionHouse.sol';
 import { ERC1155Holder } from '@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol';
 
 import { IEarthFM } from './interfaces/IEarthFM.sol';
-import { IWETH } from './interfaces/IWETH.sol';
 
 contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, ReentrancyGuardUpgradeable, OwnableUpgradeable, ERC1155Holder{
     // The EarthFM ERC1155 token contract
     IEarthFM public earthFm;
-
-    // The address of the WETH contract
-    address public weth;
 
     // The minimum amount of time left in an auction after a new bid is created
     uint256 public timeBuffer;
@@ -64,7 +60,6 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
      */
     function initialize(
         IEarthFM _earthFm,
-        address _weth,
         uint256 _timeBuffer,
         uint256 _reservePrice,
         uint8 _minBidIncrementPercentage,
@@ -77,7 +72,6 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
         _pause();
 
         earthFm = _earthFm;
-        weth = _weth;
         timeBuffer = _timeBuffer;
         reservePrice = _reservePrice;
         minBidIncrementPercentage = _minBidIncrementPercentage;
@@ -245,7 +239,7 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
     }
 
     /**
-     * @notice Transfer Matic and return the success status.
+     * @notice Transfer ETH and return the success status.
      * @dev This function only forwards 30,000 gas to the callee.
      */
     function _safeTransferMatic(address to, uint256 value) internal returns (bool) {
