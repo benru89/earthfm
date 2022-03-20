@@ -51,6 +51,8 @@ interface IEarthFMAuctionHouse {
 
     event AuctionMinBidIncrementPercentageUpdated(uint256 minBidIncrementPercentage);
 
+    event ErrorLogging(string reason);
+
     function settleAuction() external;
 
     function settleCurrentAndCreateNewAuction() external;

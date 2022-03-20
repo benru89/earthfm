@@ -30,10 +30,12 @@ import { ReentrancyGuardUpgradeable } from '@openzeppelin/contracts-upgradeable/
 import { OwnableUpgradeable } from '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 import { IERC20 } from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import { IEarthFMAuctionHouse } from './interfaces/IEarthFMAuctionHouse.sol';
+import { ERC1155Holder } from '@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol';
+
 import { IEarthFM } from './interfaces/IEarthFM.sol';
 import { IWETH } from './interfaces/IWETH.sol';
 
-contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, ReentrancyGuardUpgradeable, OwnableUpgradeable {
+contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, ReentrancyGuardUpgradeable, OwnableUpgradeable, ERC1155Holder{
     // The EarthFM ERC1155 token contract
     IEarthFM public earthFm;
 
@@ -210,7 +212,8 @@ contract EarthFMAuctionHouse is IEarthFMAuctionHouse, PausableUpgradeable, Reent
             });
 
             emit AuctionCreated(earthSoundId, startTime, endTime);
-        } catch Error(string memory) {
+        } catch Error(string memory error) {
+            emit ErrorLogging(error);
             _pause();
         }
     }
