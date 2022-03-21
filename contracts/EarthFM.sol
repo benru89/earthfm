@@ -79,7 +79,7 @@ contract EarthFM is IEarthFM, ERC1155, Ownable{
      * @notice Mint 1 Earth Sound to the minter
      */
     function mint() public override onlyMinter returns (uint256) {
-        _mint(minter, _currentEarthSoundId++, 1, "");
+        _mint(minter, ++_currentEarthSoundId, 1, "");
 
         emit EarthSoundMinted(_currentEarthSoundId);
         return _currentEarthSoundId;
