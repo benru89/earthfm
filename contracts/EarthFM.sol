@@ -26,6 +26,9 @@ import { Ownable } from '@openzeppelin/contracts/access/Ownable.sol';
 
 contract EarthFM is IEarthFM, ERC1155, Ownable{
 
+    //OpenSea expects a public property name
+    string public name = "Earth.fm";
+
     // An address who has permissions to mint
     address public minter;
 
@@ -70,7 +73,7 @@ contract EarthFM is IEarthFM, ERC1155, Ownable{
     constructor(
         address _daoAddress,
         address _minter
-    ) ERC1155("ipfs://QmQASvEyxHqeUgqs7CKFTEPkxjw6ksC91DrCdqqAELctJW/{id}.json") {
+    ) ERC1155("ipfs://QmRKRiJK6W2WkWRRLMZsUr2iFDxnupR5VNpxjyHeRcfxm7/{id}.json") {
         daoAddress = _daoAddress;
         minter = _minter;
     }
