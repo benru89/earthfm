@@ -5,3 +5,4 @@ remix-compiler.config.js
 cache/solidity-files-cache.json
 scripts/sample-script.js
 test/sample-test.js
+.env
